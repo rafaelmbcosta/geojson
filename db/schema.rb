@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_04_044214) do
+ActiveRecord::Schema.define(version: 2019_09_05_212104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "coordinates", force: :cascade do |t|
+    t.decimal "x", precision: 17, scale: 15
+    t.decimal "y", precision: 17, scale: 15
+    t.boolean "inside_polygon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "fixed_locations", force: :cascade do |t|
     t.datetime "created_at", null: false

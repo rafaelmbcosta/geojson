@@ -1,0 +1,3 @@
+class CoordinatesController < ApplicationController
+  
+end
