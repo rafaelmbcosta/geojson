@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :feature_collections
   resources :coordinates
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get '/areas' => 'feature_collections#areas'
+  post '/inside' => 'coordinates#inside', as: :inside
 end
