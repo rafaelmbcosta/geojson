@@ -1,17 +1,27 @@
+require 'geojson_error'
+
 module Concerns
   module Polygon
     extend ActiveSupport::Concern
 
     included do
-      # Calculates if point is included in polygon
-      # Is a class method because its used with the static values
-      def self.base_coordinate_array
-         base['features'].collect { |f| f['geometry']['coordinates'].first }
+      def self.inside(params)
+        raise GeojsonError::MissingInformationError if params.keys.sort != %w[geometry properties type]
+
+        raise GeojsonError::MissingInformationError if params['geometry'].blank? ||
+                                                       params['geometry']['coordinates'].blank?
+        raise GeojsonError::InvalidCoordinatesError unless float_coordinates?(params['geometry']['coordinates'])
+
+        raise GeojsonError::NotPointError if params['geometry']['type'] != 'Point'
+
+        coordinates = params['geometry']['coordinates']
+        inside_any_polygon?(coordinates[0], coordinates[1])
       end
 
-      # Iterate through all polygons check if its inside any
+      # Calculates if point is included in polygon
+      # Is a class method because its used with the static values
       def self.inside_any_polygon?(x, y)
-        base_coordinate_array.each do |coordinates|
+        FeatureCollection.last.location_array.each do |coordinates|
           return true if inside_polygon?(coordinates, x, y)
         end
         false
@@ -23,7 +33,6 @@ module Concerns
       def self.inside_polygon?(coordinates, x, y)
         last_point = coordinates.last
         oddNodes = false
-
         coordinates.each do |coordinate|
           yi = coordinate[1]
           xi = coordinate[0]
@@ -33,7 +42,6 @@ module Concerns
               yj < y && yi >= y
             oddNodes = !oddNodes if xi + (y - yi) / (yj - yi) * (xj - xi) < x
           end
-
           last_point = coordinate
         end
         oddNodes

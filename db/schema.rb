@@ -10,15 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_05_212104) do
+ActiveRecord::Schema.define(version: 2019_15_67_881911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "coordinates", force: :cascade do |t|
-    t.decimal "x", precision: 17, scale: 15
-    t.decimal "y", precision: 17, scale: 15
+    t.decimal "x", precision: 18, scale: 16
+    t.decimal "y", precision: 18, scale: 16
     t.boolean "inside_polygon"
+    t.bigint "feature_collection_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_collection_id"], name: "index_coordinates_on_feature_collection_id"
+  end
+
+  create_table "feature_collections", force: :cascade do |t|
+    t.json "areas"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -28,4 +36,5 @@ ActiveRecord::Schema.define(version: 2019_09_05_212104) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "coordinates", "feature_collections"
 end

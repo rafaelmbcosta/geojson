@@ -2,6 +2,7 @@ require 'rails_helper'
 
 shared_examples 'polygon' do
   let(:model) { described_class }
+  let(:feature_collection) { FeatureCollection.new }
   let(:coordinates) do
     [   
       [-119.61914062499999, 33.578014746143985], [-113.37890625, 30.90222470517144],
@@ -18,6 +19,11 @@ shared_examples 'polygon' do
       [-117.861328125, 50.233151832472245], [-123.74999999999999, 46.558860303117164],
       [-124.01367187499999, 39.027718840211605], [-119.61914062499999, 33.578014746143985]
     ]
+  end
+
+  before do
+    allow(FeatureCollection).to receive(:last).and_return(feature_collection)
+    allow(feature_collection).to receive(:location_array).and_return(coordinates)
   end
 
   describe 'inside_polygon?' do
@@ -50,10 +56,41 @@ shared_examples 'polygon' do
     end
   end
 
-  describe 'base_coordinate_array' do
-    # since its static, no need for deep testing
-    it 'returns and array' do
-      expect(model.base_coordinate_array).to be_instance_of(Array)
+  describe 'inside' do
+    let(:params) do
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-43.1982421875, -7.406047717076258]
+        },
+        "properties": {
+          "name": "Dinagat Islands"
+        }
+      }
+    end
+
+    before do
+      allow(model).to receive(:inside_any_polygon?).and_return(true)
+    end
+
+    it 'return true if no exception is caught' do
+      expect(model.inside(params.deep_stringify_keys)).to be true
+    end
+
+    it 'raises NotPointError' do
+      params[:geometry][:type] = 'Polygon'
+      expect { model.inside(params.deep_stringify_keys) }.to raise_error(GeojsonError::NotPointError)
+    end
+
+    it 'raises InvalidCoordinatesError' do
+      params[:geometry][:coordinates] = [1, 2]
+      expect { model.inside(params.deep_stringify_keys) }.to raise_error(GeojsonError::InvalidCoordinatesError)
+    end
+
+    it 'raises MissingInformationError' do
+      params['geometry'] = {}
+      expect { model.inside(params.deep_stringify_keys) }.to raise_error(GeojsonError::MissingInformationError)
     end
   end
 end
