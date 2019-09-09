@@ -2,6 +2,7 @@
 
 Example using GeoJSON locations
 
+[DEMO](http://geojsondemo.herokuapp.com/areas)
 
 ### Check the last area:
 
@@ -15,7 +16,7 @@ PARAMS:
 
 ```json
 {
-	"point" : {
+  "point": {
       "type": "Feature",
       "geometry": {
         "type": "Point",
@@ -40,7 +41,7 @@ PARAMS:
 
 ```json
 {
-	"feature_collection": {
+  "feature_collection": {
       "type": "FeatureCollection",
       "features": [
         {
