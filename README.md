@@ -2,6 +2,7 @@
 
 Example using GeoJSON locations
 
+[DEMO](http://geojsondemo.herokuapp.com/areas)
 
 ### Check the last area:
 
