@@ -40,4 +40,10 @@ class GeojsonError
       'Invalid parameters'
     end
   end
+
+  class GeocodingError < StandardError
+    def message
+      'Geocoding failed'
+    end
+  end
 end

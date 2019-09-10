@@ -6,7 +6,7 @@ class ApplicationRecord < ActiveRecord::Base
     (coordinates.flatten.collect(&:class) - [Float]) == []
   end
 
-  # when is called from instance
+  # # when is called from instance
   def float_coordinates?(coordinates)
     self.class.float_coordinates?(coordinates)
   end

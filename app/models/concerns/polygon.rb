@@ -27,6 +27,10 @@ module Concerns
         false
       end
 
+      def inside_any_polygon?
+        self.class.inside_any_polygon?(x, y)
+      end
+
       # Verifies if the coordinates are inside the polygon
       # Code adapted from the geokit gem
       # no need to check if polygon is closed because its static and closed.

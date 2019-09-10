@@ -24,3 +24,5 @@
 
 # Ignore simplecov report
 coverage/*
+# Ignore application configuration
+/config/application.yml

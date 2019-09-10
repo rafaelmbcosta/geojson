@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_15_67_881911) do
+ActiveRecord::Schema.define(version: 2019_15_67_881912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,9 @@ ActiveRecord::Schema.define(version: 2019_15_67_881911) do
     t.bigint "feature_collection_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.string "query"
+    t.string "async_errors"
     t.index ["feature_collection_id"], name: "index_coordinates_on_feature_collection_id"
   end
 
