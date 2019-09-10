@@ -80,4 +80,21 @@ PARAMS:
  }
 ```
 
+### Search by name (and get an ID):
+
+POST: localhost:3000/coordinates
+
+PARAMS:
+
+```json
+{
+	"location": {
+		"query": "fortaleza"
+	}
+}
+```
+
+### See API search result with ID:
+
+GET: localhost:3000/coordinates/:id
 

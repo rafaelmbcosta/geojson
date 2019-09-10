@@ -54,4 +54,37 @@ RSpec.describe "Coordinates", type: :request do
       expect(response.body).to eq({ error: 'Geojson type is not a Point' }.to_json)
     end
   end
+
+  describe 'POST create' do
+    it 'returns and ID' do
+      post '/coordinates', params: { location: { query: 'fortaleza' } }, as: :json
+      expect(response).to have_http_status(:created)
+    end
+
+    it 'raises invalid parameters' do
+      post '/coordinates', params: { location: { query: '' } }, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
+  describe 'GET show' do
+    let(:coordinate) { Coordinate.create(x: 1.1, y: 2.2, query: 'fortal', name: 'Fortaleza') }
+    let(:error_coordinate) { Coordinate.create(query: 'fortal', async_errors: 'Invalid Parameters') }
+  
+    it 'renders coordinate' do
+      get "/coordinates/#{coordinate.id}"
+      expect(response.body).to eq(coordinate.to_json)
+    end
+
+    it 'renders errors' do
+      get "/coordinates/#{error_coordinate.id}"
+      expect(response.body).to eq({ error: error_coordinate.async_errors }.to_json)
+    end
+
+    it 'returns error message if cannot find id' do
+      get "/coordinates/-1"
+      expect(response).to  have_http_status(:unprocessable_entity)
+      expect(response.body).to eq({ error: 'Coordinate not found' }.to_json)
+    end
+  end
 end
