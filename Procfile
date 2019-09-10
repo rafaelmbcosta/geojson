@@ -1,0 +1,1 @@
+google_service_worker: bundle exec sidekiq -c 1
